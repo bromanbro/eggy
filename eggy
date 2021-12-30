@@ -1,0 +1,36 @@
+#!/usr/bin/python3
+
+import curses
+from pyfiglet import figlet_format
+from re import search
+from time import sleep
+from sys import argv
+
+def showUsage():
+    print('usage: eggy 00:00')
+    exit()
+
+def main(stdscr):
+    try:
+        curses.curs_set(0)
+        minutes = int(argv[1].split(':')[0])
+        seconds = int(argv[1].split(':')[1])
+        seconds += minutes * 60
+        while seconds:
+            stdscr.clear()
+            timeString = figlet_format(f'{(seconds // 60):02}:{(seconds % 60):02}')
+            stdscr.addstr(0, 0, timeString)
+            seconds -= 1
+            stdscr.refresh()
+            sleep(1)
+    except KeyboardInterrupt:
+        return
+
+if len(argv) != 2:
+    showUsage()
+
+if not search('^(\d\d?:\d\d)$', argv[1]):
+    showUsage()
+
+curses.wrapper(main)
+print('Have a Big One.')
